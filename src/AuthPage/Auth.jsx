@@ -21,8 +21,7 @@ function Auth() {
     	const data=isLogin?{ userName,password }:{ email,userName,password }
     	// console.log(data);
         try{
-           const response = await axios.post(`cp-monitor-server.vercel.app
-${url}`,data,{
+           const response = await axios.post(`https://cp-monitor-server.vercel.app${url}`,data,{
            	withCredentials:true, 
            })
             // console.log(response)

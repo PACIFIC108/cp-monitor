@@ -10,7 +10,8 @@ const navigate = useNavigate();
 
    const logoutHandler=async ()=>{
     try{
-       const reponse=await axios.post(`http://localhost:3000/auth/logout`,{},{
+       const reponse=await axios.post(`cp-monitor-server.vercel.app
+/auth/logout`,{},{
             withCredentials:true, 
            })
        localStorage.removeItem("token")

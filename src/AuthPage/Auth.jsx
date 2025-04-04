@@ -21,7 +21,8 @@ function Auth() {
     	const data=isLogin?{ userName,password }:{ email,userName,password }
     	// console.log(data);
         try{
-           const response = await axios.post(`http://localhost:3000${url}`,data,{
+           const response = await axios.post(`cp-monitor-server.vercel.app
+${url}`,data,{
            	withCredentials:true, 
            })
             // console.log(response)
@@ -55,7 +56,7 @@ function Auth() {
 		<div className="flex items-center  justify-center min-h-screen bg-gradient-to-r from-purple-500 to-red-500 ">
            <div className="mr-16 flex flex-col items-center justify-center min-h-screen  text-white p-6 w-full md:w-auto">
 			 
-			  <img src="images/CP_Monitor.png" alt="CP_MonitorLogo" 
+			  <img src="/images/CP_Monitor.png" alt="CP_MonitorLogo" 
 			  className="w-32 h-32 mb-4 rounded-full shadow-lg" />
 			  <h1 className="text-4xl font-extrabold text-center leading-tight">Welcome To CP_Monitor</h1>
 			

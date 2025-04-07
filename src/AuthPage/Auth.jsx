@@ -21,7 +21,7 @@ function Auth() {
     	const data=isLogin?{ userName,password }:{ email,userName,password }
     	// console.log(data);
         try{
-           const response = await axios.post(`http://localhost:3000${url}`,data,{
+           const response = await axios.post(`https://cp-monitor-server.onrender.com${url}`,data,{
            	withCredentials:true, 
            })
             // console.log(response)

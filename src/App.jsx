@@ -14,7 +14,7 @@ function App() {
 
     useEffect(() => {
 
-      axios.get("https://cp-monitor-server.vercel.app/auth/checkAuth", { withCredentials: true })
+      axios.get("http://localhost:3000/auth/checkAuth", { withCredentials: true })
       .then((res) => {
         if (res.status !== 200) {
           toast.info("Kindly Login First");

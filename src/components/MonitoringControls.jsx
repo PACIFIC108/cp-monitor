@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HandleVerdict from './HandleVerdict';
 import { toast } from 'sonner';
 
 const MonitoringControls = ({ userHandle, success }) => {
     const [statusmessage, setstatusmessage] = useState('');
     const [monitoring, setMonitoring] = useState(false);
-    const [lastsubmissionId, setLastsubmissionId] = useState('');
-    const [monitoringInterval, setMonitoringInterval] = useState(null);
     const [latestVerdict, setlatestVerdict] = useState('');
+
+    const lastSubmissionIdRef = useRef(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         setstatusmessage("");
         setMonitoring(false);
         setlatestVerdict('');
+        lastSubmissionIdRef.current = null;
 
         if (Notification.permission !== 'granted') {
             Notification.requestPermission()
@@ -22,11 +24,16 @@ const MonitoringControls = ({ userHandle, success }) => {
                     }
                 });
         }
+
+        return () => {
+            // Cleanup on unmount
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
     }, [success, userHandle]);
 
-    if (!success) {
-        return;
-    }
+    if (!success) return null;
 
     const getLastSubmission = async () => {
         try {
@@ -35,7 +42,7 @@ const MonitoringControls = ({ userHandle, success }) => {
 
             if (data.status === 'OK' && data.result.length > 0) {
                 const submissionId = data.result[0].id;
-                setLastsubmissionId(submissionId);
+                lastSubmissionIdRef.current = submissionId;
             } else {
                 toast.warning("Submission not fetched");
                 console.warn("Submission not fetched");
@@ -48,43 +55,37 @@ const MonitoringControls = ({ userHandle, success }) => {
 
     const StartMonitoring = async () => {
         setstatusmessage("Monitoring has started");
-        await getLastSubmission(); // Ensure last submission is fetched before starting monitoring
+        await getLastSubmission();
         setMonitoring(true);
         toast.info("Monitoring has started!");
 
-         if (monitoringInterval) {
-            clearInterval(monitoringInterval);
-         }
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+        }
 
-        const interval = setInterval(async () => {
+        intervalRef.current = setInterval(async () => {
             try {
-
                 const response = await fetch(`https://codeforces.com/api/user.status?handle=${userHandle}&from=1&count=1`);
                 const data = await response.json();
-
 
                 if (data.status === 'OK' && data.result.length > 0) {
                     const latestSubmission = data.result[0];
                     const submissionId = latestSubmission.id;
                     const verdict = latestSubmission.verdict;
-                      console.log(lastsubmissionId,submissionId)
-                      console.log(verdict,latestVerdict)
 
-                    setLastsubmissionId(prevId => {
-                        if (prevId !== submissionId && verdict !== 'TESTING') {
-                            setlatestVerdict(verdict);
-                            return submissionId;
-                        }
-                        return prevId;
-                    });
+                    // console.log(lastSubmissionIdRef.current, submissionId);
+                    // console.log(verdict, 'latestVerdict');
+
+                    if (lastSubmissionIdRef.current !== submissionId && verdict !== 'TESTING') {
+                        lastSubmissionIdRef.current = submissionId;
+                        setlatestVerdict(verdict);
+                    }
                 }
             } catch (error) {
                 toast.error("Error fetching submission status:");
                 console.error("Error fetching submission status:", error);
             }
         }, 5000);
-
-        setMonitoringInterval(interval);
     };
 
     const stopMonitoring = () => {
@@ -92,9 +93,9 @@ const MonitoringControls = ({ userHandle, success }) => {
         setMonitoring(false);
         setlatestVerdict(null);
 
-        if (monitoringInterval) {
-            clearInterval(monitoringInterval);
-            setMonitoringInterval(null);
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
         }
 
         toast.info('Monitoring stopped');
@@ -120,9 +121,9 @@ const MonitoringControls = ({ userHandle, success }) => {
                     Stop Monitoring
                 </button>
             )}
-         
+
             {latestVerdict && <HandleVerdict latestVerdict={latestVerdict} userHandle={userHandle} />}
-        </div> 
+        </div>
     );
 };
 

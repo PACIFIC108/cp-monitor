@@ -14,7 +14,7 @@ function App() {
 
     useEffect(() => {
 
-      axios.get("http://localhost:3000/auth/checkAuth", { withCredentials: true })
+      axios.get("https://cp-monitor-server.onrender.com/auth/checkAuth", { withCredentials: true })
       .then((res) => {
         if (res.status !== 200) {
           toast.info("Kindly Login First");

@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import { toast } from 'sonner';
 
 const UserInput=({userhandle,setUserhandle,success,setsuccess})=>{
    const[userHandle,setUserHandle]=useState('')
@@ -20,6 +21,8 @@ const UserInput=({userhandle,setUserhandle,success,setsuccess})=>{
       setfriends('');
       setsuccess(false);
       setUserHandle('')
+      setLoginStatus('Please enter a Codeforces handle.');
+      toast.success('Logged Out')
       return 
     }
 

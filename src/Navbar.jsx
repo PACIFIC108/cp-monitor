@@ -9,14 +9,14 @@ function Navbar() {
 		      {/* Logo */}
 		     <div >
 
-		      <a href='/app' className="flex items-center justify-center gap-2">
+		      <Link to='/app' className="flex items-center justify-center gap-2">
 			      <img src="images/CP_Monitor.png" alt="CP_MonitorLogo" 
-			    
 				     className="w-16 h-16  rounded-full shadow-lg" />
+			      
 			      <div className="text-4xl font-bold text-zinc-400">CP_Monitor</div>
-               </a>
-
-              </div>
+	               </Link>
+	
+	              </div>
 
 		      {/* Navigation Links */}
 		      <ul className="flex space-x-4">

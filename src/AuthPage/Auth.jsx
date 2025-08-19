@@ -25,14 +25,14 @@ function Auth() {
 
 		try {
 			setIsLoading(true); 
-			const response = await axios.post(`http://localhost:3000${url}`, data, {
+			const response = await axios.post(`https://cp-monitor-server.onrender.com${url}`, data, {
 				withCredentials: true,
 			});
       
 			if (response.status === 201) {
 				if (isLogin) {
 					toast.success('Login Successful');
-          setIsAuthenticated(true);
+                    setIsAuthenticated(true);
 					navigate("/app");
 				} else {
 					setIsLogin(true);

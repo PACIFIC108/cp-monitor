@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
 	const checkAuth = async () => {
 		try {
-			const res = await axios.get("http://localhost:3000/api/auth/checkAuth", {
+			const res = await axios.get("https://cp-monitor-server.onrender.com/api/auth/checkAuth", {
 				withCredentials: true,
 			});
 			setIsAuthenticated(res.status === 201);
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
 	const checkUser = async () => {
 		try {
-			const response = await axios.get("http://localhost:3000/api/auth/me", {
+			const response = await axios.get("https://cp-monitor-server.onrender.com/api/auth/me", {
 				withCredentials: true,
 			});
             

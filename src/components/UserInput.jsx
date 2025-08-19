@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -8,80 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { LogIn, LogOut, Search, User2, Trophy, Medal, Users, ShieldCheck, Monitor } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-=======
-import React,{useState} from 'react';
-import { toast } from 'sonner';
-
-const UserInput=({userhandle,setUserhandle,success,setsuccess})=>{
-   const[userHandle,setUserHandle]=useState('')
-   const [loginStatus, setLoginStatus] = useState('');
-   const [rating, setrating] = useState('');
-    const [maxrating, setmaxrating] = useState('');
-     const [rank, setrank] = useState('');
-     const [maxrank, setmaxrank] = useState('');
-     const [friends, setfriends] = useState('');
-     
-  const login = async () => {
-    
-    if(success){
-      setrating('');
-      setUserhandle('');
-      setmaxrating('');
-      setrank('');
-      setmaxrank('');
-      setfriends('');
-      setsuccess(false);
-      setUserHandle('')
-      setLoginStatus('Please enter a Codeforces handle.');
-      toast.success('Logged Out')
-      return 
-    }
-
-    if (!userHandle) {
-      setLoginStatus('Please enter a Codeforces handle.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://codeforces.com/api/user.info?handles=${userHandle}`);
-      const data = await response.json();
-
-      if (data.status === 'OK') {
-         setLoginStatus(`Logged in as ${userHandle}.`);
-         setUserhandle(userHandle);
-         setsuccess(true);
-         setrating(data.result[0].rating);
-         setmaxrating(data.result[0].maxRating);
-         setrank(data.result[0].rank);
-         setmaxrank(data.result[0].maxRank);
-         setfriends(data.result[0].friendOfCount);
-      } 
-      else {
-        setLoginStatus('Invalid handle. Please try again.');
-        setUserHandle("");
-        setsuccess(false);
-      }
-    } catch (error) {
-      setLoginStatus('Error: Could not connect to Codeforces.');
-      console.error('Fetch error:', error);
-    }
-
-  };
-   return(
-   	<div>
-   	<label htmlFor="user">User</label>
-   	<input 
-   	type="text" 
-   	id="user" 
-   	value={userHandle}
-   	onChange={(e)=>setUserHandle(e.target.value)}
-   	placeholder="Enter Codeforces Handle"
-   	/>
-   	
-   	<button className="btn" onClick={login}>{!success?'Login':'Logout'}</button>
-
-   	<p id="loginMsg">{loginStatus}</p>
->>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46
 
 
 
@@ -101,7 +26,6 @@ const ratingToColor = (rating) => {
 
 const prettyRank = (rank) => (rank ? rank?.replace(/_/g, " ") : "Unrated");
 
-<<<<<<< HEAD
 function ProfileCard({ profile, onLogout }) {
 
   const color = useMemo(() => ratingToColor(profile?.rating), [profile]);
@@ -310,6 +234,3 @@ export default function UserInput() {
     </div>
   );
 }
-=======
-export default UserInput;
->>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46

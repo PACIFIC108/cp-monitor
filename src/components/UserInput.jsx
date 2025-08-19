@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const BACKEND_BASE = "http://localhost:3000/api";
+const BACKEND_BASE = "https://cp-monitor-server.onrender.com/api";
 
 const ratingToColor = (rating) => {
   if (rating == null) return "text-gray-400"; // unrated

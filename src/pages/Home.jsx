@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react'
-import Controller from "../components/Controller"
+import UserInput from '../components/UserInput';
 
 
 function Home() {
@@ -13,9 +13,8 @@ function Home() {
 	  }, []);
 
 	return (
-		<div >
-             <Controller />
-
+		<div className='App'>
+              <UserInput  />
 		</div>
 	)
 }

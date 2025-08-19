@@ -6,19 +6,19 @@ import Auth from './AuthPage/Auth'
 import { BrowserRouter , Route, Routes } from "react-router-dom";
 import './App.css'
 import { Toaster } from "sonner";
+import { AuthProvider } from './Context/AuthContext.jsx'
 
 
 createRoot(document.getElementById('root')).render(
-  // <StrictMode>
-  <>
-     <Toaster position="top-right" richColors  expand={true}/>
-
-    <BrowserRouter>
-      <Routes>
-          <Route path="/app/*" element={<App />} />
-          <Route path="/" element={<Auth />} />
-      </Routes>
-    </BrowserRouter>
-    </>
-  // </StrictMode>,
+  <StrictMode>
+    <AuthProvider>
+      <BrowserRouter>
+         <Toaster position="top-right" richColors  expand={true}/>
+          <Routes>
+              <Route path="/app/*" element={<App />} />
+              <Route path="/" element={<Auth />} />
+          </Routes>
+        </BrowserRouter>
+    </AuthProvider>
+  </StrictMode>,
 )

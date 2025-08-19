@@ -11,6 +11,26 @@ import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes.jsx"
 
 
 function App() {
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+
+    useEffect(() => {
+
+      axios.get("https://cp-monitor-server.onrender.com/auth/checkAuth", { withCredentials: true })
+      .then((res) => {
+        if (res.status !== 200) {
+          toast.info("Kindly Login First");
+          navigate("/");
+        }
+      })
+      .catch(() => {
+        toast.info("Kindly Login First");
+        navigate("/");
+      });
+
+    }, []);
+>>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46
 
   return (
     <div className="flex flex-col min-h-screen">

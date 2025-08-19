@@ -8,6 +8,7 @@ import { useAuth } from '../Context/AuthContext';
 
 function Auth() {
 	const navigate = useNavigate();
+<<<<<<< HEAD
 	const [isLogin, setIsLogin] = useState(true);
 	const [email, setEmail] = useState('');
 	const [userName, setUserName] = useState('');
@@ -33,6 +34,32 @@ function Auth() {
 				if (isLogin) {
 					toast.success('Login Successful');
           setIsAuthenticated(true);
+=======
+	const [isLogin, setIsLogin] = useState(true)
+	const [email,setEmail] = useState('')
+	const [userName,setUserName] = useState('')
+	const [password,setPassword] = useState('')
+	const [Token,setToken] = useState('')
+	const [isLoading, setIsLoading] = useState(false);
+
+    const submitHandler=async (e)=>{
+    	e.preventDefault()
+        if(isLoading)return;
+    	const url=isLogin?'/auth/Login':'/auth/Signup'
+    	const data=isLogin?{ userName,password }:{ email,userName,password }
+    	// console.log(data);
+        try{
+		setIsLoading(true); 
+                const response = await axios.post(`https://cp-monitor-server.onrender.com${url}`,data,{
+           	withCredentials:true, 
+           })
+            // console.log(response)
+          if (response.data.token) {
+				localStorage.setItem("token", response.data.token);
+				setToken(response.data.token);
+				if (isLogin) {
+					toast.success('Login Successful');
+>>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46
 					navigate("/app");
 				} else {
 					setIsLogin(true);
@@ -54,6 +81,7 @@ function Auth() {
 
 	return (
 		<div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-red-500 overflow-x-hidden px-4">
+<<<<<<< HEAD
  
   <div className="flex flex-col items-center justify-center text-white p-6 w-full md:w-auto md:mr-12 mb-8 md:mb-0">
     <img
@@ -128,8 +156,88 @@ function Auth() {
     </p>
   </div>
 </div>
+=======
+		
+		  <div className="flex flex-col items-center justify-center text-white p-6 w-full md:w-auto md:mr-12 mb-8 md:mb-0">
+		    <img
+		      src="/images/CP_Monitor.png"
+		      alt="CP_MonitorLogo"
+		      className="w-24 h-24 md:w-32 md:h-32 mb-4 rounded-full shadow-lg"
+		    />
+		    <h1 className="text-3xl md:text-4xl font-extrabold text-center leading-tight">
+		      Welcome To CP_Monitor
+		    </h1>
+		  </div>
+		
+		
+		  <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+		    <h2 className="text-3xl font-bold text-gray-800 mb-6">
+		      {isLogin ? "LogIn" : "SignUp"}
+		    </h2>
+		
+		    <form className="space-y-4" onSubmit={submitHandler}>
+		      {!isLogin && (
+		        <input
+		          type="email"
+		          placeholder="Email"
+		          value={email}
+		          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+		          onChange={(e) => setEmail(e.target.value)}
+		        />
+		      )}
+		
+		      <input
+		        type="text"
+		        placeholder="UserName"
+		        value={userName}
+		        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+		        onChange={(e) => setUserName(e.target.value)}
+		      />
+		
+		      <input
+		        type="password"
+		        placeholder="Password"
+		        value={password}
+		        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+		        onChange={(e) => setPassword(e.target.value)}
+		      />
+		
+		      <button
+		        type="submit"
+		        disabled={isLoading}
+		        className={`w-full ${
+		          isLoading
+		            ? "bg-purple-300 cursor-not-allowed"
+		            : "bg-purple-500 hover:bg-purple-600"
+		        } text-white py-2 rounded-lg transition-all`}
+		      >
+		        {isLoading ? "Processing..." : "Submit"}
+		      </button>
+		    </form>
+		
+		    <p className="text-gray-600 mt-4 text-sm">
+		      {isLogin ? "Don't have an account?" : "Already have an account?"}
+		      <button
+		        onClick={() => {
+		          setIsLogin(!isLogin);
+		          setEmail("");
+		          setUserName("");
+		          setPassword("");
+		        }}
+		        className="text-purple-500 hover:underline ml-1"
+		      >
+		        {isLogin ? "Signup" : "Login"}
+		      </button>
+		    </p>
+		  </div>
+		</div>
+>>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46
 
 	);
 }
 
+<<<<<<< HEAD
 export default Auth;
+=======
+export default Auth
+>>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46

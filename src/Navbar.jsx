@@ -10,6 +10,7 @@ function Navbar() {
 				{/* Logo */}
 				<div >
 
+<<<<<<< HEAD
 					<Link to='/app' className="flex items-center justify-center gap-2">
 						<img src="/images/CP_Monitor.png" alt="CP_MonitorLogo" 
 							className="w-16 h-16  rounded-full shadow-lg" />
@@ -18,6 +19,16 @@ function Navbar() {
 					</Link>
 
 				</div>
+=======
+		      <Link to='/app' className="flex items-center justify-center gap-2">
+			      <img src="images/CP_Monitor.png" alt="CP_MonitorLogo" 
+				     className="w-16 h-16  rounded-full shadow-lg" />
+			      
+			      <div className="text-4xl font-bold text-zinc-400">CP_Monitor</div>
+	               </Link>
+	
+	              </div>
+>>>>>>> 42dc2ce8d5b66d34a3c1e6a6bbee8d6d60804b46
 
 				<ul className="flex space-x-8">
 					<li>

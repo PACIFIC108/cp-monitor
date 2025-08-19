@@ -11,7 +11,7 @@ function Logout() {
 
        const logoutHandler=async ()=>{
         try{
-          await axios.post(`http://localhost:3000/api/auth/logout`,{},{
+          await axios.post(`https://cp-monitor-server.onrender.com/api/auth/logout`,{},{
                 withCredentials:true, 
           })
            setIsAuthenticated(false);

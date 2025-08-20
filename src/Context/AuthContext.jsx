@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 	const checkAuth = async () => {
 		try {
 			const res = await axios.get("https://cp-monitor-server.onrender.com/api/auth/checkAuth", {
-				withCredentials: true,
+				credentials: "include",
 			});
 			setIsAuthenticated(res.status === 201);
 		} catch (err) {
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 	const checkUser = async () => {
 		try {
 			const response = await axios.get("https://cp-monitor-server.onrender.com/api/auth/me", {
-				withCredentials: true,
+				credentials: "include",
 			});
             
 			setIsAuthorized(response.status === 201);

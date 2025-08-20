@@ -15,9 +15,9 @@ function Auth() {
 	const [isLoading, setIsLoading] = useState(false); 
     const {isAuthenticated,setIsAuthenticated} = useAuth();
 
- //    useEffect(() => {
-	//   if (isAuthenticated) navigate("/app");
-	// }, [isAuthenticated]);
+    useEffect(() => {
+	  if (isAuthenticated) navigate("/app");
+	}, [isAuthenticated]);
 	
 	const submitHandler = async (e) => {
 		e.preventDefault();
@@ -29,7 +29,7 @@ function Auth() {
 		try {
 			setIsLoading(true); 
 			const response = await axios.post(`https://cp-monitor-server.onrender.com${url}`, data, {
-				credentials: "include",
+				withCredentials: true
 			});
       
 			if (response.status === 201) {

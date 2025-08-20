@@ -12,7 +12,7 @@ function Logout() {
        const logoutHandler=async ()=>{
         try{
           await axios.post(`https://cp-monitor-server.onrender.com/api/auth/logout`,{},{
-                withCredentials:true, 
+                credentials: "include", 
           })
            setIsAuthenticated(false);
            navigate('/')

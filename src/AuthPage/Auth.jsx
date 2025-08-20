@@ -15,9 +15,9 @@ function Auth() {
 	const [isLoading, setIsLoading] = useState(false); 
     const {isAuthenticated,setIsAuthenticated} = useAuth();
 
-    useEffect(() => {
-	  if (isAuthenticated) navigate("/app");
-	}, [isAuthenticated]);
+ //    useEffect(() => {
+	//   if (isAuthenticated) navigate("/app");
+	// }, [isAuthenticated]);
 	
 	const submitHandler = async (e) => {
 		e.preventDefault();

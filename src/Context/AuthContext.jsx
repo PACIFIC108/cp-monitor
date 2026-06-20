@@ -1,52 +1,38 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { apiFetch } from '@/lib/api';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [isAuthorized, setIsAuthorized] = useState(true);
-	const [loading, setLoading] = useState(true);
-	const [userHandle, setUserHandle] = useState('');
+  const [user, setUser] = useState(null);
+  const [codeforcesUser, setCodeforcesUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  const refreshAuth = useCallback(async () => {
+    const [appResult, codeforcesResult] = await Promise.allSettled([
+      apiFetch('/auth/checkAuth'),
+      apiFetch('/auth/me'),
+    ]);
+    setUser(appResult.status === 'fulfilled' ? appResult.value.user : null);
+    setCodeforcesUser(codeforcesResult.status === 'fulfilled' ? codeforcesResult.value : null);
+    setLoading(false);
+  }, []);
 
-	const checkAuth = async () => {
-		try {
-			const res = await axios.get("http://localhost:3000/api/auth/checkAuth", {
-				withCredentials: true,
-			});
-			setIsAuthenticated(res.status === 201);
-		} catch (err) {
-			setIsAuthenticated(false);
-		} finally {
-			setLoading(false);
-		}
-	};
+  useEffect(() => { refreshAuth(); }, [refreshAuth]);
 
-	const checkUser = async () => {
-		try {
-			const response = await axios.get("http://localhost:3000/api/auth/me", {
-				withCredentials: true,
-			});
-            
-			setIsAuthorized(response.status === 201);
-			if (response?.data) setUserHandle(response.data.handle);
+  const value = {
+    user,
+    setUser,
+    codeforcesUser,
+    setCodeforcesUser,
+    isAuthenticated: Boolean(user),
+    isAuthorized: Boolean(codeforcesUser),
+    userHandle: codeforcesUser?.handle || '',
+    loading,
+    refreshAuth,
+  };
 
-		} catch (err) {
-			setIsAuthorized(false);
-		} 
-	};
-
-	useEffect(() => {
-		checkAuth();
-		checkUser();
-	}, []);
-
-	return (
-		<AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isAuthorized, setIsAuthorized, loading, userHandle }}>
-			{children}
-		</AuthContext.Provider>
-	);
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

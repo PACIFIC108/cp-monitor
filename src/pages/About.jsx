@@ -1,53 +1,7 @@
-import React from 'react'
-import { FaCheckCircle, FaBell, FaCode, FaRocket } from "react-icons/fa";
+import { BarChart3, BellRing, Database, Radio } from 'lucide-react';
 
-function About() {
-	return (
-		
-     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-8">
-      <h1 className="text-4xl font-bold text-blue-400 mb-6">About CP Submission Monitoring App</h1>
-      
-      {/* Main Content Container */}
-      <div className="max-w-4xl bg-gray-800 shadow-lg rounded-2xl p-6">
-        <p className="text-lg text-gray-300 mb-4">
-          The <span className="text-blue-400 font-semibold">CP Submission Monitoring App</span> is designed to help competitive programmers by providing <span className="text-green-400">automated verdict notifications</span> for their code submissions on <span className="text-yellow-400">Codeforces</span>. 
-        </p>
-        
-        <p className="text-gray-400 mb-4">
-          During high-profile contests, submission queues can be long, forcing candidates to constantly switch tabs to check their verdicts. This disrupts their concentration and wastes valuable time, often leading to penalties. Our app solves this by <span className="text-green-400">automatically announcing verdicts with different sounds for "Accepted," "Wrong Answer," etc.</span> using media files, so users can stay focused on a single tab.
-        </p>
+const features = [[Radio, 'Server-side monitoring', 'Sequential polling watches Codeforces without slowing your browser.'], [BellRing, 'Immediate verdict alerts', 'Audio, toast, and desktop notifications arrive through a live SSE stream.'], [Database, 'Durable progress history', 'Submission snapshots and contest records are stored securely in MongoDB.'], [BarChart3, 'Actionable trends', 'Switch between solved problems, wrong-answer rate, and contest rank.']];
 
-        {/* Feature Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <div className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl">
-            <FaBell className="text-yellow-400 text-2xl" />
-            <p className="text-gray-300">Real-time notifications via Codeforces API</p>
-          </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl">
-            <FaCheckCircle className="text-green-400 text-2xl" />
-            <p className="text-gray-300">Audio verdict announcements for instant updates</p>
-          </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl">
-            <FaCode className="text-blue-400 text-2xl" />
-            <p className="text-gray-300">Efficient data fetching with React hooks</p>
-          </div>
-          <div className="flex items-center gap-4 p-4 bg-gray-700 rounded-xl">
-            <FaRocket className="text-purple-400 text-2xl" />
-            <p className="text-gray-300">Smooth UI for a seamless coding experience</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Future Improvements Section */}
-      <h2 className="text-3xl font-bold text-blue-300 mt-10">Future Improvements</h2>
-      <ul className="mt-4 text-gray-400 space-y-2 text-lg">
-        <li>📌 Support for multiple online judges (LeetCode, AtCoder, etc.)</li>
-        <li>📌 Mobile-friendly version for on-the-go monitoring</li>
-        <li>📌 Submission History & Trends → Track user progress and performance analysis</li>
-        <li>📌 Leaderboard Integration → Show friends' verdicts for motivation and comparison</li>
-      </ul>
-    </div>
-  );
+export default function About() {
+  return <div className="subtle-grid min-h-screen px-4 py-14 sm:px-6"><div className="mx-auto max-w-6xl"><div className="mx-auto max-w-3xl text-center"><p className="text-xs font-bold uppercase tracking-[.2em] text-sky-400">Why CP Monitor</p><h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Protect your focus during the moments that matter.</h1><p className="mt-6 text-lg leading-8 text-slate-400">Contest queues create uncertainty and tab switching breaks concentration. CP Monitor watches the queue for you, announces the result, and turns your history into a clear picture of progress.</p></div><div className="mt-14 grid gap-5 md:grid-cols-2">{features.map(([Icon, title, text]) => <article key={title} className="glass-panel rounded-3xl p-7"><div className="grid h-11 w-11 place-items-center rounded-xl bg-sky-400/10"><Icon className="h-5 w-5 text-sky-300" /></div><h2 className="mt-6 text-lg font-bold text-white">{title}</h2><p className="mt-2 leading-7 text-slate-500">{text}</p></article>)}</div></div></div>;
 }
-
-export default About

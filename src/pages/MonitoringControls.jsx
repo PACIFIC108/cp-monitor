@@ -1,189 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Loader2, PlayCircle, Square, ExternalLink } from "lucide-react";
-import HandleVerdict from "../components/HandleVerdict";
-import { useAuth } from "../Context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BellRing, ExternalLink, Loader2, Play, Radio, Square, Volume2 } from 'lucide-react';
+import { useAuth } from '../Context/AuthContext';
+import { useVerdictMonitoring } from '../Context/VerdictMonitoringContext';
 
+const verdictStyle = (verdict) => verdict === 'OK' ? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300' : 'border-rose-400/20 bg-rose-400/10 text-rose-300';
 
-const MonitoringPanel = () => {
-	const [statusMessage, setStatusMessage] = useState("");
-	const [monitoring, setMonitoring] = useState(false);
-	const [latestVerdict, setLatestVerdict] = useState("");
+export default function MonitoringPanel() {
+  const { isAuthorized, userHandle } = useAuth();
+  const { monitoring, connectionState, latestSubmission, startMonitoring, stopMonitoring } = useVerdictMonitoring();
+  const navigate = useNavigate();
+  useEffect(() => { if (!isAuthorized || !userHandle) navigate('/app', { replace: true }); }, [isAuthorized, navigate, userHandle]);
 
-	const lastSubmissionIdRef = useRef(null);
-	const intervalRef = useRef(null);
-	const { isAuthorized, userHandle } = useAuth();
-
-	const navigate = useNavigate();
-
-	// Reset state whenever user changes
-	useEffect(() => {
-		if (!isAuthorized || !userHandle) navigate('/app');
-		setStatusMessage("");
-		setMonitoring(false);
-		setLatestVerdict("");
-		lastSubmissionIdRef.current = null;
-
-		if (Notification.permission !== "granted") {
-			Notification.requestPermission().then((permission) => {
-				if (permission !== "granted") {
-					console.warn("Notification permission not granted.");
-				}
-			});
-		}
-
-		return () => {
-			if (intervalRef.current) clearInterval(intervalRef.current);
-		};
-	}, [isAuthorized, userHandle]);
-
-	
-
-	// Get the latest submission ID initially
-	const getLastSubmission = async () => {
-		try {
-			const response = await fetch(
-				`https://codeforces.com/api/user.status?handle=${userHandle}&from=1&count=1`
-			);
-			const data = await response.json();
-
-			if (data.status === "OK" && data.result.length > 0) {
-				lastSubmissionIdRef.current = data.result[0].id;
-			} else {
-				toast.warning("Submission not fetched");
-			}
-		} catch (error) {
-			toast.error("Error fetching submission status");
-			console.error(error);
-		}
-	};
-
-	const startMonitoring = async () => {
-		setStatusMessage("Monitoring submissions...");
-		await getLastSubmission();
-		setMonitoring(true);
-		toast.info("Monitoring started!");
-
-		if (intervalRef.current) clearInterval(intervalRef.current);
-
-		intervalRef.current = setInterval(async () => {
-			try {
-				const response = await fetch(
-					`https://codeforces.com/api/user.status?handle=${userHandle}&from=1&count=1`
-				);
-				const data = await response.json();
-
-				if (data.status === "OK" && data.result.length > 0) {
-					const latestSubmission = data.result[0];
-					const submissionId = latestSubmission.id;
-					const verdict = latestSubmission.verdict;
-
-					if (
-						lastSubmissionIdRef.current !== submissionId &&
-						verdict !== "TESTING"
-					) {
-						lastSubmissionIdRef.current = submissionId;
-						setLatestVerdict(verdict);
-					}
-				}
-			} catch (error) {
-				toast.error("Error fetching submission status");
-				console.error(error);
-			}
-		}, 10000);
-	};
-
-	const stopMonitoring = () => {
-		setStatusMessage("");
-		setMonitoring(false);
-		setLatestVerdict(null);
-
-		if (intervalRef.current) {
-			clearInterval(intervalRef.current);
-			intervalRef.current = null;
-		}
-
-		toast.info("Monitoring stopped");
-	};
-
-	return (
-		<Card className="w-full max-w-xl mx-auto p-6 rounded-2xl shadow-lg mt-32">
-			<CardHeader>
-				<h2 className="text-2xl font-semibold text-center">
-					Submission Monitoring
-				</h2>
-				<p className="text-sm text-gray-500 text-center">
-					Handle: <span className="font-medium">{userHandle}</span>
-				</p>
-			</CardHeader>
-
-			<CardContent className="flex flex-col gap-6">
-				{/* Monitoring Status */}
-				{statusMessage && (
-					<div className="flex justify-center items-center gap-2 text-gray-700">
-						<Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-						<span>{statusMessage}</span>
-					</div>
-				)}
-
-				{/* Start / Stop Monitoring */}
-				{!monitoring ? (
-					<Button
-						onClick={startMonitoring}
-						className="w-full bg-green-500 hover:bg-green-600"
-					>
-						<PlayCircle className="mr-2 h-5 w-5" /> Start Monitoring
-					</Button>
-				) : (
-					<Button
-						onClick={stopMonitoring}
-						className="w-full bg-red-500 hover:bg-red-600"
-					>
-						<Square className="mr-2 h-5 w-5" /> Stop Monitoring
-					</Button>
-				)}
-
-				{/* Verdict Output */}
-				{latestVerdict && (
-					<div className="bg-gray-100 rounded-xl p-4 text-center shadow-inner">
-						<HandleVerdict
-							latestVerdict={latestVerdict}
-							userHandle={userHandle}
-						/>
-					</div>
-				)}
-
-				{/* Extra Options */}
-				<div className="flex flex-col gap-3 pt-4 border-t">
-					<Button
-						variant="outline"
-						onClick={() =>
-							window.open(`https://codeforces.com/submissions/${userHandle}`, "_blank")
-						}
-					>
-						View Submissions <ExternalLink className="ml-2 h-4 w-4" />
-					</Button>
-					<Button
-						variant="outline"
-						onClick={() =>
-							window.open(`https://codeforces.com/profile/${userHandle}`, "_blank")
-						}
-					>
-						View Profile <ExternalLink className="ml-2 h-4 w-4" />
-					</Button>
-					<Button
-						variant="outline"
-						onClick={() => window.open("https://codeforces.com/contests", "_blank")}
-					>
-						Upcoming Contests <ExternalLink className="ml-2 h-4 w-4" />
-					</Button>
-				</div>
-			</CardContent>
-		</Card>
-	);
-};
-
-export default MonitoringPanel;
+  const status = { connecting: 'Establishing live connection', connected: 'Watching for new submissions', reconnecting: 'Reconnecting to the stream' }[connectionState] || 'Monitor is currently idle';
+  return (
+    <div className="subtle-grid min-h-screen px-4 py-12 sm:px-6 lg:px-8"><div className="mx-auto max-w-5xl"><div className="mb-8"><div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-sky-400"><Radio className="h-4 w-4" />Live monitor</div><h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">Stay focused. We’ll call the verdict.</h1><p className="mt-3 max-w-2xl text-slate-500">Server-side monitoring continues while you move around the app. Keep this browser open and notifications enabled.</p></div>
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_.85fr]"><section className="glass-panel rounded-3xl p-6 sm:p-8"><div className="flex items-center justify-between gap-4"><div><p className="text-sm font-semibold text-slate-500">Connected profile</p><p className="mt-1 text-xl font-bold text-white">{userHandle}</p></div><div className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold ${monitoring ? 'bg-emerald-400/10 text-emerald-300' : 'bg-white/[.05] text-slate-500'}`}><span className={`h-2 w-2 rounded-full ${monitoring ? 'animate-pulse bg-emerald-400' : 'bg-slate-600'}`} />{monitoring ? 'Live' : 'Offline'}</div></div>
+        <div className="my-8 grid min-h-48 place-items-center rounded-2xl border border-white/[.07] bg-black/20 p-6 text-center">{latestSubmission ? <div><p className="text-xs font-bold uppercase tracking-[.16em] text-slate-600">Latest verdict</p><div className={`mt-4 rounded-2xl border px-6 py-4 text-xl font-extrabold ${verdictStyle(latestSubmission.verdict)}`}>{latestSubmission.verdict.replaceAll('_', ' ')}</div><p className="mt-3 text-xs text-slate-600">Submission #{latestSubmission.id}</p></div> : <div><BellRing className="mx-auto h-9 w-9 text-slate-700" /><p className="mt-4 font-semibold text-slate-400">No verdict received in this session</p><p className="mt-1 text-sm text-slate-600">Your next completed submission will appear here.</p></div>}</div>
+        <div className="mb-5 flex items-center gap-3 rounded-xl bg-white/[.035] p-4 text-sm text-slate-400">{connectionState === 'connecting' || connectionState === 'reconnecting' ? <Loader2 className="h-4 w-4 animate-spin text-sky-400" /> : <span className={`h-2.5 w-2.5 rounded-full ${monitoring ? 'bg-emerald-400' : 'bg-slate-600'}`} />} {status}</div>
+        {!monitoring ? <button type="button" onClick={startMonitoring} className="flex w-full items-center justify-center gap-2 rounded-xl bg-sky-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-sky-500/15 transition hover:bg-sky-400"><Play className="h-4 w-4 fill-current" />Start monitoring</button> : <button type="button" onClick={() => stopMonitoring()} className="flex w-full items-center justify-center gap-2 rounded-xl bg-rose-500/90 py-3.5 text-sm font-bold text-white transition hover:bg-rose-500"><Square className="h-4 w-4 fill-current" />Stop monitoring</button>}</section>
+        <aside className="space-y-6"><div className="glass-panel rounded-3xl p-6"><h2 className="font-bold text-white">Before you start</h2><div className="mt-5 space-y-4">{[[Volume2, 'Keep browser audio enabled'], [BellRing, 'Allow desktop notifications'], [Radio, 'Leave this browser window open']].map(([Icon, text]) => <div key={text} className="flex items-center gap-3 text-sm text-slate-400"><div className="grid h-9 w-9 place-items-center rounded-xl bg-white/[.05]"><Icon className="h-4 w-4 text-sky-300" /></div>{text}</div>)}</div></div><div className="glass-panel rounded-3xl p-6"><h2 className="font-bold text-white">Codeforces shortcuts</h2><div className="mt-4 space-y-2">{[[`https://codeforces.com/submissions/${userHandle}`, 'My submissions'], [`https://codeforces.com/profile/${userHandle}`, 'My profile'], ['https://codeforces.com/contests', 'Upcoming contests']].map(([url, label]) => <button type="button" key={label} onClick={() => window.open(url, '_blank', 'noopener,noreferrer')} className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-sm text-slate-400 transition hover:bg-white/[.05] hover:text-white">{label}<ExternalLink className="h-4 w-4" /></button>)}</div></div></aside></div></div></div>
+  );
+}

@@ -1,33 +1,31 @@
-import { Routes, Route } from "react-router-dom"
-
-
-import Footer from "./Footer.jsx"
-import Navbar from './Navbar.jsx'
-import Home from './pages/Home'
-import Contact from './pages/Contact'
-import MonitoringControls from './pages/MonitoringControls'
-import About from './pages/About'
-import ProtectedRoutes from "./ProtectedRoutes/ProtectedRoutes.jsx"
-
+import { Route, Routes } from 'react-router-dom';
+import Footer from './Footer.jsx';
+import Navbar from './Navbar.jsx';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import MonitoringControls from './pages/MonitoringControls';
+import About from './pages/About';
+import ProtectedRoutes from './ProtectedRoutes/ProtectedRoutes.jsx';
+import Profile from './pages/Profile.jsx';
 
 function App() {
-
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className='mb-16'><Navbar /></div>
-      <main className="flex-grow">
+    <div className="min-h-screen bg-[#070b14] text-slate-100">
+      <Navbar />
+      <main className="min-h-[calc(100vh-8rem)] pt-20">
         <Routes>
           <Route element={<ProtectedRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/monitoring-control" element={<MonitoringControls />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </main>
-      <div className="mt-10"><Footer /></div>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

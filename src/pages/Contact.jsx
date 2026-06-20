@@ -1,40 +1,7 @@
-import React from 'react'
+import { Instagram, Mail, MessageCircle, Phone } from 'lucide-react';
 
-function Contact() {
-	return (
-		<div className="flex justify-center items-center h-screen bg-gradient-to-r from-blue-300 to-orange-300">
-			<div className="w-96 p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-xl border border-gray-300 text-white">
-				<ul className="space-y-4">
-					{/* Instagram Link */}
-					<li className="bg-gray-800 text-white text-center flex items-center justify-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-600 hover:scale-105">
-						<a href="https://www.instagram.com/prasantkayshep__/profilecard/?igsh=OXo1MXFvMDI3NXhi" 
-						   target="_blank" rel="noopener noreferrer">
-							<i className="fab fa-instagram mr-2"></i> Instagram
-						</a>
-					</li>
-					
-					{/* Phone Link */}
-					<li className="bg-gray-800 text-white text-center flex items-center justify-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-600 hover:scale-105">
-						<a href="tel:+916201663796">
-							<i className="fas fa-phone mr-2"></i> Call Us
-						</a>
-					</li>
+const contacts = [[Mail, 'Email', 'pkkr.pacific@gmail.com', 'mailto:pkkr.pacific@gmail.com'], [Phone, 'Phone', '+91 62016 63796', 'tel:+916201663796'], [MessageCircle, 'WhatsApp', 'Start a conversation', 'https://wa.me/916201663796'], [Instagram, 'Instagram', '@prasantkayshep__', 'https://www.instagram.com/prasantkayshep__']];
 
-					<li className="bg-gray-800 text-white text-center flex items-center justify-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-600 hover:scale-105">
-						<a href="https://wa.me/+916201663796" target="_blank" rel="noopener noreferrer">
-							<i className="fab fa-whatsapp mr-2"></i> Message Us
-						</a>
-					</li>
-
-					<li className="bg-gray-800 text-white text-center flex items-center justify-center p-4 rounded-lg transition-all duration-300 hover:bg-gray-600 hover:scale-105">
-						<a href="mailto:pkkr.pacific@gmail.com">
-							<i className="fas fa-envelope mr-2"></i> Mail Us
-						</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	)
+export default function Contact() {
+  return <div className="subtle-grid min-h-screen px-4 py-14 sm:px-6"><div className="mx-auto max-w-5xl"><div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.2em] text-sky-400">Contact</p><h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white">Questions, ideas, or a verdict we should hear about?</h1><p className="mt-5 leading-7 text-slate-400">Reach out through whichever channel works best. Feedback from competitive programmers is what makes the monitor sharper.</p></div><div className="mt-12 grid gap-4 sm:grid-cols-2">{contacts.map(([Icon, label, value, href]) => <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" className="glass-panel group flex items-center gap-5 rounded-2xl p-6 transition hover:-translate-y-1 hover:border-sky-400/20"><div className="grid h-12 w-12 place-items-center rounded-xl bg-white/[.05] transition group-hover:bg-sky-400/10"><Icon className="h-5 w-5 text-sky-300" /></div><div><p className="text-xs font-bold uppercase tracking-wider text-slate-600">{label}</p><p className="mt-1 font-semibold text-slate-300">{value}</p></div></a>)}</div></div></div>;
 }
-
-export default Contact;
